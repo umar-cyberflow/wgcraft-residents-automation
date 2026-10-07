@@ -319,7 +319,7 @@ def process_account(acc, count, today, state):
         return "skipped_not_1", f"Проживает={cur!r}"
 
     # ---- Рег. док-та ----
-    state["stage"] = "reg_dok"
+    state["stage"] = "reg_doc"
     click_text("Рег. док", idx=0, contains=True)
     wait_for(X("Рег номер"))
     num = input_after("Рег номер", title=MODAL_REG_TITLE)
@@ -333,7 +333,7 @@ def process_account(acc, count, today, state):
     time.sleep(0.8)
 
     # ---- Residents count ----
-    state["stage"] = "jon_soni"   # an error here means the registration document already exists
+    state["stage"] = "residents"   # an error here means the registration document already exists
     btn_xp = ("//*[normalize-space(text())='Прописано']"
               "/following::*[normalize-space(text())='...' or @value='...'][1]")
     click(wait_for(btn_xp)[0])
@@ -432,7 +432,7 @@ def main():
             except Exception as e:  # noqa
                 dump_debug(acc, state["stage"])
                 # registration document already created -> do not retry (avoids duplicates)
-                st = "error_partial" if state["stage"] == "jon_soni" else "error"
+                st = "error_partial" if state["stage"] == "residents" else "error"
                 msg = f"[{state['stage']}] {type(e).__name__}: {str(e)[:200]}"
                 consecutive_err += 1
                 recover(user, password)
