@@ -293,7 +293,7 @@ def card_residents(timeout=T_WAIT):
 
 def process_account(acc, count, today, state):
     """Return (status, message). state["stage"] tracks the current step."""
-    state["stage"] = "qidiruv"
+    state["stage"] = "search"
     open_search()
     inp = input_after(ACCOUNT_LABEL, idx=0)
     set_value(inp, acc)
@@ -308,7 +308,7 @@ def process_account(acc, count, today, state):
         pass
     click_text("Применить")
 
-    state["stage"] = "karta"
+    state["stage"] = "card"
     try:
         wait_for(X("Рег. док", contains=True), 20)
     except TimeoutException:
@@ -349,7 +349,7 @@ def process_account(acc, count, today, state):
     wait_gone(X(MODAL_RES_TITLE))
 
     # ---- Verification ----
-    state["stage"] = "tekshiruv"
+    state["stage"] = "verify"
     ok = False
     for _ in range(12):
         try:
